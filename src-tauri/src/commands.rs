@@ -11,8 +11,6 @@ pub enum CommandError {
     ReadError(String),
     #[error("Failed to write file: {0}")]
     WriteError(String),
-    #[error("Invalid path: {0}")]
-    InvalidPath(String),
 }
 
 impl Serialize for CommandError {
