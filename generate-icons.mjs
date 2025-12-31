@@ -4,7 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const inputSvg = path.join(__dirname, '..', 'logo.svg');
+const inputSvg = path.join(__dirname, 'new_logo.svg');
 const iconsDir = path.join(__dirname, 'src-tauri', 'icons');
 
 // Ensure icons directory exists

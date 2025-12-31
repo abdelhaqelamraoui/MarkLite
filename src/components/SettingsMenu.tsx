@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
-import { useTheme, Theme, FontFamily } from '../context/ThemeContext';
+import { useTheme, Theme, FontFamily, FontSize } from '../context/ThemeContext';
 
-const themes: { id: Theme; name: string; colors: [string, string, string] }[] = [
-    { id: 'dark', name: 'Dark', colors: ['#21222c', '#282a36', '#bd93f9'] },
-    { id: 'light', name: 'Light', colors: ['#ffffff', '#f8f9fa', '#6366f1'] },
-    { id: 'paper', name: 'Paper', colors: ['#f5f0e6', '#ebe5d8', '#8b7355'] },
+const themes: { id: Theme; name: string; colors: [string, string]; textColor: string }[] = [
+    { id: 'dark', name: 'Dark', colors: ['#0a0a0a', '#141414'], textColor: '#ffffff' },
+    { id: 'light', name: 'Light', colors: ['#ffffff', '#f5f5f5'], textColor: '#171717' },
+    { id: 'paper', name: 'Paper', colors: ['#f5f0e6', '#ebe5d8'], textColor: '#3d3d3d' },
 ];
 
 const fonts: { id: FontFamily; name: string; family: string }[] = [
@@ -15,9 +15,15 @@ const fonts: { id: FontFamily; name: string; family: string }[] = [
     { id: 'fira-sans', name: 'Fira Sans', family: "'Fira Sans', sans-serif" },
 ];
 
+const fontSizes: { id: FontSize; name: string; size: string }[] = [
+    { id: 'small', name: 'Small', size: '14px' },
+    { id: 'medium', name: 'Medium', size: '16px' },
+    { id: 'large', name: 'Large', size: '18px' },
+];
+
 export function SettingsMenu() {
     const [isOpen, setIsOpen] = useState(false);
-    const { theme, setTheme, font, setFont } = useTheme();
+    const { theme, setTheme, font, setFont, fontSize, setFontSize } = useTheme();
     const menuRef = useRef<HTMLDivElement>(null);
 
     // Close menu when clicking outside
@@ -48,7 +54,7 @@ export function SettingsMenu() {
 
             {/* Dropdown Menu */}
             {isOpen && (
-                <div className="absolute right-0 top-full mt-2 w-64 bg-[var(--bg-secondary)] border border-[var(--border)] rounded-xl shadow-2xl overflow-hidden z-50">
+                <div className="absolute right-0 top-full mt-2 w-72 bg-[var(--bg-secondary)] border border-[var(--border)] rounded-xl shadow-2xl overflow-hidden z-50">
                     {/* Theme Section */}
                     <div className="p-4 border-b border-[var(--border)]">
                         <div className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-3">
@@ -60,17 +66,23 @@ export function SettingsMenu() {
                                     key={t.id}
                                     onClick={() => setTheme(t.id)}
                                     className={`flex-1 flex flex-col items-center gap-2 p-3 rounded-lg transition-all ${theme === t.id
-                                            ? 'bg-[var(--accent)] bg-opacity-20 ring-2 ring-[var(--accent)]'
+                                            ? 'ring-2 ring-[var(--accent)] bg-[var(--bg-hover)]'
                                             : 'hover:bg-[var(--bg-hover)]'
                                         }`}
                                     title={t.name}
                                 >
                                     {/* Theme Preview */}
-                                    <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-[var(--border)] flex">
-                                        <div className="w-1/2" style={{ backgroundColor: t.colors[0] }}></div>
-                                        <div className="w-1/2" style={{ backgroundColor: t.colors[1] }}></div>
+                                    <div
+                                        className="w-10 h-10 rounded-lg overflow-hidden border border-[var(--border)] flex shadow-sm"
+                                        style={{ backgroundColor: t.colors[0] }}
+                                    >
+                                        <div className="w-1/2 h-full" style={{ backgroundColor: t.colors[0] }}></div>
+                                        <div className="w-1/2 h-full" style={{ backgroundColor: t.colors[1] }}></div>
                                     </div>
-                                    <span className="text-[10px] font-medium text-[var(--text-secondary)]">
+                                    <span
+                                        className="text-[11px] font-medium"
+                                        style={{ color: 'var(--text-primary)' }}
+                                    >
                                         {t.name}
                                     </span>
                                 </button>
@@ -79,7 +91,7 @@ export function SettingsMenu() {
                     </div>
 
                     {/* Font Section */}
-                    <div className="p-4">
+                    <div className="p-4 border-b border-[var(--border)]">
                         <div className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-3">
                             Font
                         </div>
@@ -95,6 +107,27 @@ export function SettingsMenu() {
                                     style={{ fontFamily: f.family }}
                                 >
                                     {f.name}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Font Size Section */}
+                    <div className="p-4">
+                        <div className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-3">
+                            Font Size
+                        </div>
+                        <div className="flex gap-2">
+                            {fontSizes.map((s) => (
+                                <button
+                                    key={s.id}
+                                    onClick={() => setFontSize(s.id)}
+                                    className={`flex-1 px-3 py-2 rounded-lg transition-all text-sm text-center ${fontSize === s.id
+                                            ? 'bg-[var(--accent)] text-[var(--accent-text)] font-medium'
+                                            : 'text-[var(--text-primary)] hover:bg-[var(--bg-hover)]'
+                                        }`}
+                                >
+                                    {s.name}
                                 </button>
                             ))}
                         </div>

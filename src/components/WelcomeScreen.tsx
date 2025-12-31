@@ -31,11 +31,9 @@ export function WelcomeScreen({ onOpenFile, onFileDrop }: WelcomeScreenProps) {
             className="flex-1 flex flex-col items-center justify-center p-6 no-select"
         >
             <div className="flex flex-col items-center gap-8 max-w-sm text-center">
-                {/* Minimal Logo */}
-                <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-[var(--bg-secondary)] border border-[var(--border)]">
-                    <span className="material-symbols-outlined text-3xl text-[var(--accent)]">
-                        markdown
-                    </span>
+                {/* Logo */}
+                <div className="flex items-center justify-center w-20 h-20">
+                    <img src="/icon.svg" alt="MarkLite" className="w-full h-full" />
                 </div>
 
                 {/* App Name */}
