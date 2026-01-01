@@ -202,7 +202,7 @@ function AppContent() {
       ) : (
         <>
           {mode === "preview" ? (
-            <div key="preview" className="flex-1 flex flex-col animate-fade-in">
+            <div key="preview" className="flex-1 animate-fade-in overflow-hidden flex flex-col">
               <MarkdownPreview
                 content={content}
                 fileName={fileName || ""}
@@ -213,7 +213,7 @@ function AppContent() {
               />
             </div>
           ) : (
-            <div key="code" className="flex-1 flex flex-col animate-fade-in">
+            <div key="code" className="flex-1 animate-fade-in overflow-hidden flex flex-col">
               <CodeEditor
                 content={content}
                 onChange={handleContentChange}
