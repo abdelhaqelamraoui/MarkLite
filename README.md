@@ -26,7 +26,6 @@ Download the latest release from the [Releases](https://github.com/Razee4315/Mar
 ### Available Formats
 
 - **Windows**: `.msi` installer or `.exe` portable
-- **macOS**: `.dmg` disk image
 - **Linux**: `.deb`, `.rpm`, or `.AppImage`
 
 ## Development
