@@ -9,6 +9,8 @@ import { MarkdownPreview } from "./components/MarkdownPreview";
 import { CodeEditor } from "./components/CodeEditor";
 import { StatusBar } from "./components/StatusBar";
 import { ModeToggle } from "./components/ModeToggle";
+import { FileExplorer } from "./components/FileExplorer";
+import { TableOfContents } from "./components/TableOfContents";
 
 interface FileData {
   path: string;
@@ -31,6 +33,10 @@ function AppContent() {
   // UI state
   const [mode, setMode] = useState<ViewMode>("preview");
   const [cursorPosition] = useState({ line: 1, col: 1 });
+
+  // Sidebar panel state
+  const [showFileExplorer, setShowFileExplorer] = useState(false);
+  const [showTOC, setShowTOC] = useState(false);
 
   // Derived state
   const isDirty = content !== originalContent;
@@ -111,6 +117,24 @@ function AppContent() {
     setMode((prev) => (prev === "preview" ? "code" : "preview"));
   }, []);
 
+  // Toggle file explorer (mutually exclusive with TOC)
+  const handleToggleFileExplorer = useCallback(() => {
+    setShowFileExplorer((prev) => !prev);
+    setShowTOC(false);
+  }, []);
+
+  // Toggle table of contents (mutually exclusive with file explorer)
+  const handleToggleTOC = useCallback(() => {
+    setShowTOC((prev) => !prev);
+    setShowFileExplorer(false);
+  }, []);
+
+  // Close all panels
+  const closeAllPanels = useCallback(() => {
+    setShowFileExplorer(false);
+    setShowTOC(false);
+  }, []);
+
   // Handle file drop
   const handleFileDrop = useCallback(
     (path: string) => {
@@ -146,11 +170,25 @@ function AppContent() {
           handleToggleMode();
         }
       }
+      // Ctrl+Shift+E - Toggle file explorer
+      if (e.ctrlKey && e.shiftKey && e.key === "E") {
+        e.preventDefault();
+        if (hasFile) {
+          handleToggleFileExplorer();
+        }
+      }
+      // Ctrl+Shift+O - Toggle TOC
+      if (e.ctrlKey && e.shiftKey && e.key === "O") {
+        e.preventDefault();
+        if (hasFile) {
+          handleToggleTOC();
+        }
+      }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleOpenFile, handleSaveFile, handleToggleMode, hasFile, content]);
+  }, [handleOpenFile, handleSaveFile, handleToggleMode, handleToggleFileExplorer, handleToggleTOC, hasFile, content]);
 
   return (
     <div className="h-screen flex flex-col bg-[var(--bg-primary)] overflow-hidden transition-colors">
@@ -173,10 +211,28 @@ function AppContent() {
           )}
 
           <ModeToggle mode={mode} onToggle={handleToggleMode} />
+
+          {/* Sidebar Panels */}
+          <FileExplorer
+            isOpen={showFileExplorer}
+            currentFilePath={filePath}
+            onFileSelect={loadFile}
+            onClose={closeAllPanels}
+          />
+          <TableOfContents
+            isOpen={showTOC}
+            content={content}
+            onClose={closeAllPanels}
+          />
+
           <StatusBar
             isSaved={!isDirty}
             lineNumber={cursorPosition.line}
             columnNumber={cursorPosition.col}
+            showFileExplorer={showFileExplorer}
+            showTOC={showTOC}
+            onToggleFileExplorer={handleToggleFileExplorer}
+            onToggleTOC={handleToggleTOC}
           />
         </>
       )}

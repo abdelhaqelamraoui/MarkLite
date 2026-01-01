@@ -1,6 +1,6 @@
 mod commands;
 
-use commands::{read_file, save_file, get_file_info};
+use commands::{read_file, save_file, get_file_info, list_directory_files};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -11,7 +11,8 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             read_file,
             save_file,
-            get_file_info
+            get_file_info,
+            list_directory_files
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
