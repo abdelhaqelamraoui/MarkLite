@@ -2,7 +2,8 @@ interface StatusBarProps {
     isSaved: boolean;
     lineNumber: number;
     columnNumber: number;
-    fileType?: string;
+    totalLines?: number;
+    mode?: "preview" | "code";
     showFileExplorer?: boolean;
     showTOC?: boolean;
     onToggleFileExplorer?: () => void;
@@ -13,7 +14,8 @@ export function StatusBar({
     isSaved,
     lineNumber,
     columnNumber,
-    fileType = "Markdown",
+    totalLines,
+    mode = "preview",
     showFileExplorer = false,
     showTOC = false,
     onToggleFileExplorer,
@@ -27,8 +29,8 @@ export function StatusBar({
                     onClick={onToggleFileExplorer}
                     title="Files (Ctrl+Shift+E)"
                     className={`flex items-center justify-center w-6 h-5 rounded transition-colors ${showFileExplorer
-                            ? "bg-[var(--accent)] text-[var(--accent-text)]"
-                            : "hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                        ? "bg-[var(--accent)] text-[var(--accent-text)]"
+                        : "hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                         }`}
                 >
                     <span className="material-symbols-outlined text-[14px]">
@@ -41,22 +43,14 @@ export function StatusBar({
                     onClick={onToggleTOC}
                     title="Table of Contents (Ctrl+Shift+O)"
                     className={`flex items-center justify-center w-6 h-5 rounded transition-colors ${showTOC
-                            ? "bg-[var(--accent)] text-[var(--accent-text)]"
-                            : "hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                        ? "bg-[var(--accent)] text-[var(--accent-text)]"
+                        : "hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                         }`}
                 >
                     <span className="material-symbols-outlined text-[14px]">
                         format_list_bulleted
                     </span>
                 </button>
-
-                {/* Separator */}
-                <div className="w-[1px] h-3 bg-[var(--border)] mx-1.5"></div>
-
-                {/* File Type */}
-                <div className="hover:text-[var(--text-primary)] cursor-default transition-colors">
-                    {fileType}
-                </div>
             </div>
             <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1.5">
@@ -68,9 +62,11 @@ export function StatusBar({
                     ></span>
                     <span>{isSaved ? "Saved" : "Unsaved"}</span>
                 </div>
-                <div className="hover:text-[var(--text-primary)] cursor-default transition-colors">
-                    Ln {lineNumber}, Col {columnNumber}
-                </div>
+                {mode === "code" && (
+                    <div className="hover:text-[var(--text-primary)] cursor-default transition-colors">
+                        Ln {lineNumber}, Col {columnNumber}
+                    </div>
+                )}
                 <div className="hover:text-[var(--text-primary)] cursor-default transition-colors">
                     UTF-8
                 </div>
