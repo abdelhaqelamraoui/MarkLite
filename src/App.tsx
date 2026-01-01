@@ -32,11 +32,14 @@ function AppContent() {
 
   // UI state
   const [mode, setMode] = useState<ViewMode>("preview");
-  const [cursorPosition] = useState({ line: 1, col: 1 });
+  const [cursorPosition, setCursorPosition] = useState({ line: 1, col: 1 });
 
   // Sidebar panel state
   const [showFileExplorer, setShowFileExplorer] = useState(false);
   const [showTOC, setShowTOC] = useState(false);
+
+  // Preview scroll position
+  const [previewLine, setPreviewLine] = useState(1);
 
   // Derived state
   const isDirty = content !== originalContent;
@@ -205,9 +208,14 @@ function AppContent() {
               lineCount={lineCount}
               fileSize={fileSize}
               onEditClick={handleToggleMode}
+              onLineChange={(line) => setPreviewLine(line)}
             />
           ) : (
-            <CodeEditor content={content} onChange={handleContentChange} />
+            <CodeEditor
+              content={content}
+              onChange={handleContentChange}
+              onCursorChange={(line, col) => setCursorPosition({ line, col })}
+            />
           )}
 
           <ModeToggle mode={mode} onToggle={handleToggleMode} />
@@ -227,8 +235,10 @@ function AppContent() {
 
           <StatusBar
             isSaved={!isDirty}
-            lineNumber={cursorPosition.line}
+            lineNumber={mode === "preview" ? previewLine : cursorPosition.line}
             columnNumber={cursorPosition.col}
+            totalLines={lineCount}
+            mode={mode}
             showFileExplorer={showFileExplorer}
             showTOC={showTOC}
             onToggleFileExplorer={handleToggleFileExplorer}
