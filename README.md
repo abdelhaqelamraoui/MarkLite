@@ -119,4 +119,8 @@ Linkedin: [@saqlain.razee](https://www.linkedin.com/in/saqlainrazee/)
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is **source available** with restricted commercial use:
+- ✅ **Personal use** - Free to use, copy, and modify
+- ❌ **Commercial use** - Requires written permission from the author
+
+See the [LICENSE](LICENSE) file for full details.
