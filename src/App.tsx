@@ -1,8 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { open, save } from "@tauri-apps/plugin-dialog";
 import { listen, TauriEvent } from "@tauri-apps/api/event";
-
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
 
 import { ThemeProvider } from "./context/ThemeContext";
 import { TitleBar } from "./components/TitleBar";
@@ -48,6 +50,10 @@ function AppContent() {
 
   // Preview scroll position
   const [previewLine, setPreviewLine] = useState(1);
+
+  // Export HTML content ref
+  const exportRef = useRef<HTMLDivElement>(null);
+  const [exportHtml, setExportHtml] = useState<string>("");
 
   // Derived state
   const isDirty = content !== originalContent;
@@ -256,9 +262,42 @@ function AppContent() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleOpenFile, handleSaveFile, handleToggleMode, handleToggleFileExplorer, handleToggleTOC, hasFile, content]);
 
+  // Update export HTML when content changes
+  useEffect(() => {
+    if (exportRef.current && content) {
+      // Small delay to ensure Markdown has rendered
+      const timer = setTimeout(() => {
+        if (exportRef.current) {
+          setExportHtml(exportRef.current.innerHTML);
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    } else {
+      setExportHtml("");
+    }
+  }, [content]);
+
   return (
     <div className="h-screen flex flex-col bg-[var(--bg-primary)] overflow-hidden transition-colors">
-      <TitleBar fileName={fileName ?? undefined} isDirty={isDirty} filePath={filePath ?? undefined} onOpenFile={handleOpenFile} onSaveFile={handleSaveFile} />
+      <TitleBar 
+        fileName={fileName ?? undefined} 
+        isDirty={isDirty} 
+        filePath={filePath ?? undefined} 
+        onOpenFile={handleOpenFile} 
+        onSaveFile={handleSaveFile}
+        htmlContent={exportHtml}
+      />
+
+      {/* Hidden export renderer - positioned off-screen to allow rendering */}
+      <div 
+        ref={exportRef} 
+        className="absolute -left-[9999px] -top-[9999px] w-[800px]"
+        aria-hidden="true"
+      >
+        <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]}>
+          {content}
+        </Markdown>
+      </div>
 
       {!hasFile ? (
         <WelcomeScreen onOpenFile={handleOpenFile} onFileDrop={handleFileDrop} />

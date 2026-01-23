@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Window } from "@tauri-apps/api/window";
 import { SettingsMenu } from "./SettingsMenu";
+import { ExportMenu } from "./ExportMenu";
 import { UnsavedChangesDialog } from "./UnsavedChangesDialog";
 
 interface TitleBarProps {
@@ -9,9 +10,10 @@ interface TitleBarProps {
     filePath?: string;
     onOpenFile?: () => void;
     onSaveFile?: () => Promise<void>;
+    htmlContent?: string;
 }
 
-export function TitleBar({ fileName, isDirty, filePath, onOpenFile, onSaveFile }: TitleBarProps) {
+export function TitleBar({ fileName, isDirty, filePath, onOpenFile, onSaveFile, htmlContent }: TitleBarProps) {
     const [showUnsavedDialog, setShowUnsavedDialog] = useState(false);
 
     const handleMinimize = async () => {
@@ -114,6 +116,11 @@ export function TitleBar({ fileName, isDirty, filePath, onOpenFile, onSaveFile }
                                 <span className="material-symbols-outlined text-[16px]">folder_open</span>
                                 <span>Open</span>
                             </button>
+                            <ExportMenu
+                                fileName={fileName || 'document.md'}
+                                htmlContent={htmlContent || ''}
+                                disabled={!htmlContent}
+                            />
                         </>
                     )}
                 </div>
