@@ -7,6 +7,7 @@ interface StatusBarProps {
     showTOC?: boolean;
     onToggleFileExplorer?: () => void;
     onToggleTOC?: () => void;
+    wordCount?: number;
 }
 
 export function StatusBar({
@@ -18,6 +19,7 @@ export function StatusBar({
     showTOC = false,
     onToggleFileExplorer,
     onToggleTOC,
+    wordCount,
 }: StatusBarProps) {
     return (
         <footer className="h-7 shrink-0 bg-[var(--bg-titlebar)] border-t border-[var(--border)] px-4 flex items-center justify-between text-[11px] font-medium tracking-wide text-[var(--text-secondary)] no-select transition-colors">
@@ -63,6 +65,11 @@ export function StatusBar({
                 {mode === "code" && (
                     <div className="hover:text-[var(--text-primary)] cursor-default transition-colors">
                         Ln {lineNumber}, Col {columnNumber}
+                    </div>
+                )}
+                {wordCount !== undefined && (
+                    <div className="hover:text-[var(--text-primary)] cursor-default transition-colors">
+                        {wordCount.toLocaleString()} words
                     </div>
                 )}
                 <div className="hover:text-[var(--text-primary)] cursor-default transition-colors">

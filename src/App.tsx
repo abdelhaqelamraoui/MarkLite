@@ -24,6 +24,12 @@ interface FileData {
 
 type ViewMode = "preview" | "code";
 
+// Utility function to count words in text
+const getWordCount = (text: string): number => {
+  if (!text || !text.trim()) return 0;
+  return text.trim().split(/\s+/).length;
+};
+
 function AppContent() {
   // File state
   const [filePath, setFilePath] = useState<string | null>(null);
@@ -47,6 +53,7 @@ function AppContent() {
   const isDirty = content !== originalContent;
   const lineCount = content.split("\n").length;
   const hasFile = filePath !== null;
+  const wordCount = getWordCount(content);
 
   // Load file from path
   const loadFile = useCallback(async (path: string) => {
@@ -302,6 +309,7 @@ function AppContent() {
             showTOC={showTOC}
             onToggleFileExplorer={handleToggleFileExplorer}
             onToggleTOC={handleToggleTOC}
+            wordCount={wordCount}
           />
         </>
       )}
