@@ -251,7 +251,7 @@ function AppContent() {
 
   return (
     <div className="h-screen flex flex-col bg-[var(--bg-primary)] overflow-hidden transition-colors">
-      <TitleBar fileName={fileName ?? undefined} isDirty={isDirty} filePath={filePath ?? undefined} onOpenFile={handleOpenFile} />
+      <TitleBar fileName={fileName ?? undefined} isDirty={isDirty} filePath={filePath ?? undefined} onOpenFile={handleOpenFile} onSaveFile={handleSaveFile} />
 
       {!hasFile ? (
         <WelcomeScreen onOpenFile={handleOpenFile} onFileDrop={handleFileDrop} />
